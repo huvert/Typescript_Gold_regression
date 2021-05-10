@@ -1,0 +1,64 @@
+//
+//    THIS IS A TYPESCRIPT FILE. COPY THE CODE BELOW INTO TRADINGVIEW
+//    
+//    I did not feel like publishing the code on tradingview as i'm almost ashamed of how unclean it is :D
+
+
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © Huvert
+
+// My first code in TypeScript :/
+
+//@version=4
+study("Gold - Regression", overlay=true)
+
+// -----------------------------------------------------------
+//                         READ ME
+//
+// This script plots a curved fitted only to ticker symbol: GOLD
+// ONLY WORKS ON MONTHLY TIMEFRAME
+//
+// The plot should reassemble a 2nd degree polynominal. 
+// However i did not figure out how to do a simple plot in this language :P
+// So i ended up using previous value for the plot. The euqation is as follows:
+//      y = y[k-1] + (x-bottom) * steepness * x
+//
+//      (x-bottom) is used to adjust the starting point. x-0 would be Origo.
+//
+// Again - this should be the same as a 2nd degree polynominal BUT instead of calculating it directly.
+// You take the previous vale and add the derivation og the curve for each point. Calculated numericly. 
+//
+//
+//          ------- Adjusting Curve -------
+// To change the bottom of the curve: Adjust variable 'bottom'
+// To change the steepness of the curve: Adjust variable 
+//
+// -----------------------------------------------------------
+
+steepness = 0.40               // <--- Adjust me
+
+reg_fun(base) =>
+    prev_month = -2
+    months_passed = 0
+    sign = -1
+    x = 1600.0
+    bottom = 56                 // <--- Adjust me
+    
+    if year >= 2008
+        if timeframe.ismonthly // Update every cycle
+            months_passed := nz(months_passed[1]) + 1                                       // months_passed += 1
+            
+            if months_passed >= bottom
+                sign := 1
+            else
+                sign := -1
+            x := nz(x[1]) + sign * abs(months_passed-bottom)*base
+    x
+    
+os = 43
+c = color.new(#9C27B0, 0)
+
+// Decide if graph should be transparent
+c := (year>=2008 and (timeframe.ismonthly )) ? color.new(#9C27B0, 0) : color.new(#9C27B0, 100)
+
+plot(series=reg_fun(steepness), color=c, offset = floor(os))
