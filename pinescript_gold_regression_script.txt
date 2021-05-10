@@ -1,5 +1,5 @@
 //
-//    THIS IS A TYPESCRIPT FILE. COPY THE CODE BELOW INTO TRADINGVIEW
+//    THIS IS A PINESCRIPT FILE. COPY THE CODE BELOW INTO TRADINGVIEW
 //    
 //    I did not feel like publishing the code on tradingview as i'm almost ashamed of how unclean it is :D
 
